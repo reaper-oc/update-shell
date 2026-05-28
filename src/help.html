@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>updSH Help</title>
+<style>
+  body { font-family: 'Courier New', monospace; background: #1a1a2e; color: #e0e0e0; margin: 0; padding: 20px; }
+  .wrap { max-width: 900px; margin: 0 auto; }
+  h1 { color: #00d4aa; border-bottom: 2px solid #00d4aa; padding-bottom: 8px; }
+  h2 { color: #0abde3; margin-top: 30px; }
+  h3 { color: #feca57; }
+  .cmd { background: #16213e; padding: 12px 16px; border-radius: 6px; margin: 8px 0; border-left: 3px solid #00d4aa; }
+  .cmd b { color: #ff6b6b; }
+  .cmd .desc { color: #b0b0b0; margin-top: 4px; }
+  .cmd .args { color: #feca57; }
+  .cmds { display: flex; flex-direction: column; gap: 4px; }
+  code { background: #0f3460; padding: 2px 6px; border-radius: 3px; color: #00d4aa; }
+  .tag { display: inline-block; background: #00d4aa; color: #1a1a2e; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: bold; margin-left: 8px; }
+  .tag-builtin { background: #0abde3; }
+  .tag-feature { background: #feca57; color: #1a1a2e; }
+  .footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #333; color: #666; font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>updSH &mdash; Shell Reference</h1>
+<p>A friendly Linux shell with a built-in package manager, customizable prompt, alias system, and job control.</p>
+
+<h2>Built-in Commands</h2>
+
+<div class="cmds">
+<div class="cmd"><b>cd</b> <span class="args">&lt;dir&gt;</span><span class="tag tag-builtin">builtin</span><div class="desc">Change the current working directory. Defaults to <code>~</code> if no argument given.</div></div>
+<div class="cmd"><b>exit</b> <span class="args">[code]</span><span class="tag tag-builtin">builtin</span><div class="desc">Exit the shell with an optional exit code (default 0).</div></div>
+<div class="cmd"><b>pwd</b><span class="tag tag-builtin">builtin</span><div class="desc">Print the current working directory.</div></div>
+<div class="cmd"><b>echo</b> <span class="args">[text...]</span><span class="tag tag-builtin">builtin</span><div class="desc">Print text to stdout. Joins all arguments with spaces.</div></div>
+<div class="cmd"><b>clear</b><span class="tag tag-builtin">builtin</span><div class="desc">Clear the terminal screen.</div></div>
+<div class="cmd"><b>export</b> <span class="args">KEY=VALUE [...]</span><span class="tag tag-builtin">builtin</span><div class="desc">Set environment variables. Multiple KEY=VALUE pairs accepted.</div></div>
+<div class="cmd"><b>history</b><span class="tag tag-builtin">builtin</span><div class="desc">Show command history with line numbers.</div></div>
+<div class="cmd"><b>help</b><span class="tag tag-builtin">builtin</span><div class="desc">Open this help page in your browser.</div></div>
+<div class="cmd"><b>jobs</b><span class="tag tag-builtin">builtin</span><div class="desc">List all background jobs with their IDs and status.</div></div>
+<div class="cmd"><b>fg</b> <span class="args">[id]</span><span class="tag tag-builtin">builtin</span><div class="desc">Bring a background job to the foreground. Defaults to most recent job.</div></div>
+<div class="cmd"><b>bg</b> <span class="args">[id]</span><span class="tag tag-builtin">builtin</span><div class="desc">Resume a stopped job in the background. Defaults to most recent job.</div></div>
+<div class="cmd"><b>source</b> <span class="args">&lt;file&gt;</span><span class="tag tag-builtin">builtin</span><div class="desc">Read and execute commands from a file.</div></div>
+<div class="cmd"><b>type</b> <span class="args">&lt;cmd&gt;</span><span class="tag tag-builtin">builtin</span><div class="desc">Show whether a command is a builtin, external, or not found.</div></div>
+<div class="cmd"><b>alias</b> <span class="args">[name=value ...]</span><span class="tag tag-builtin">builtin</span><div class="desc">Define an alias or list all aliases. Use <code>alias name=value</code> to set.</div></div>
+<div class="cmd"><b>unalias</b> <span class="args">&lt;name&gt;</span><span class="tag tag-builtin">builtin</span><div class="desc">Remove an alias.</div></div>
+</div>
+
+<h2>Package Manager: <code>pkg</code></h2>
+<p>Manage packages from the Vercel-hosted registry or built-in collection.</p>
+
+<div class="cmds">
+<div class="cmd"><b>pkg install</b> <span class="args">&lt;package&gt;</span> <span class="args">[packages...]</span><div class="desc">Install one or more packages. Downloads source, compiles C/Rust, or builds from git repos automatically.</div></div>
+<div class="cmd"><b>pkg remove</b> <span class="args">&lt;package&gt;</span> <span class="args">[packages...]</span><div class="desc">Remove an installed package.</div></div>
+<div class="cmd"><b>pkg list</b><div class="desc">List all currently installed packages.</div></div>
+<div class="cmd"><b>pkg search</b> <span class="args">[query]</span><div class="desc">Search available packages by name or description. Omitting query shows all.</div></div>
+<div class="cmd"><b>pkg info</b> <span class="args">&lt;package&gt;</span><div class="desc">Show detailed information about a package (version, description, type, author, dependencies).</div></div>
+<div class="cmd"><b>pkg update</b><div class="desc">Update all installed packages to the latest version.</div></div>
+<div class="cmd"><b>pkg help</b><div class="desc">Show package manager help text.</div></div>
+</div>
+
+<h3>Package Types</h3>
+<ul>
+<li><b>source</b> &mdash; Shell alias scripts sourced on shell startup.</li>
+<li><b>compile</b> &mdash; C or Rust source code compiled with <code>gcc</code> or <code>rustc</code> into a binary.</li>
+<li><b>build</b> &mdash; Clones a git repository, runs <code>cmake</code>, <code>cargo</code>, or <code>make</code> to build real upstream tools (fastfetch, ripgrep, fd, bat, fzf, etc.).</li>
+</ul>
+
+<h2>Shell Features</h2>
+
+<h3>Auto-completion (Tab)</h3>
+<p>Press <code>Tab</code> to complete commands (first word) or file paths. Press <code>Tab</code> again to cycle through matches.</p>
+<p>Fish-style autosuggestions appear in gray as you type based on command history. Press <code>Ctrl+F</code> or <code>Right Arrow</code> to accept.</p>
+
+<h3>Pipes</h3>
+<p>Chain commands with <code>|</code>: <code>cmd1 | cmd2 | cmd3</code></p>
+
+<h3>Redirections</h3>
+<ul>
+<li><code>&gt; file</code> &mdash; Redirect stdout to file (overwrite)</li>
+<li><code>&gt;&gt; file</code> &mdash; Append stdout to file</li>
+<li><code>&lt; file</code> &mdash; Read stdin from file</li>
+<li><code>2&gt; file</code> &mdash; Redirect stderr to file</li>
+<li><code>2&gt;&amp;1</code> &mdash; Redirect stderr to stdout</li>
+</ul>
+
+<h3>Background Jobs</h3>
+<p>Append <code>&amp;</code> to run a command in the background: <code>cmd &amp;</code></p>
+<p>Use <code>jobs</code> to list, <code>fg</code> to bring to foreground, <code>bg</code> to resume.</p>
+
+<h3>Command Sequencing</h3>
+<p>Separate multiple commands with <code>;</code>: <code>cmd1; cmd2; cmd3</code></p>
+
+<h3>Variables</h3>
+<ul>
+<li><code>$VAR</code> &mdash; Expand variable</li>
+<li><code>${VAR}</code> &mdash; Variable with explicit boundaries</li>
+<li><code>~</code> &mdash; Expand to home directory</li>
+</ul>
+
+<h3>Command History</h3>
+<ul>
+<li>Up/Down arrows &mdash; Navigate history</li>
+<li>Persistence &mdash; History saved to <code>~/.local/share/updsh/history.txt</code></li>
+</ul>
+
+<h2>Prompt Customization</h2>
+<p>Configure in <code>~/.config/updsh/env</code> or via environment variables:</p>
+<pre><code>UPD_PROMPT_STYLE=multiline     # multiline, powerline, minimal, plain
+UPD_COLOR_USER=green
+UPD_COLOR_HOST=blue
+UPD_COLOR_PATH=yellow
+UPD_COLOR_GIT=red
+UPD_COLOR_EXIT=red
+UPD_SHOW_GIT=yes               # Show git branch in prompt
+UPD_SHOW_EXIT_CODE=yes         # Show exit code on failure</code></pre>
+<p>Prompt styles:</p>
+<ul>
+<li><b>multiline</b> &mdash; Two-line themed prompt with decorative border</li>
+<li><b>powerline</b> &mdash; Powerline-style colored background segments</li>
+<li><b>minimal</b> &mdash; Compact single line with git branch</li>
+<li><b>plain</b> &mdash; Simple <code>~/path $</code> prompt</li>
+</ul>
+
+<h2>Security</h2>
+<p>All packages are automatically scanned for malicious patterns:</p>
+<ul>
+<li>Destructive commands (<code>rm -rf /</code>, <code>mkfs</code>, <code>dd if=/dev/zero</code>)</li>
+<li>Fork bombs and pipe-to-shell patterns</li>
+<li><code>sudo rm -rf</code>, raw device writes (<code>/dev/sda</code>)</li>
+<li>Remote code execution via <code>eval $(curl</code></li>
+</ul>
+<p>Malicious packages are deleted immediately.</p>
+
+<h2>Quick Reference</h2>
+<table>
+<tr><th>Key</th><th>Action</th></tr>
+<tr><td><code>Tab</code></td><td>Auto-complete commands / paths</td></tr>
+<tr><td><code>Ctrl+F</code> / <code>Right Arrow</code></td><td>Accept autosuggestion</td></tr>
+<tr><td><code>Up / Down</code></td><td>Navigate history</td></tr>
+<tr><td><code>Ctrl+C</code></td><td>Interrupt current command</td></tr>
+<tr><td><code>Ctrl+D</code></td><td>Exit shell</td></tr>
+</table>
+
+<div class="footer">
+updSH &mdash; A friendly Linux shell with a built-in package manager.
+</div>
+</div>
+</body>
+</html>
