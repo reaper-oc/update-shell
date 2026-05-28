@@ -1,5 +1,0 @@
-{
-  "rewrites": [
-    { "source": "/api/pkg/:name", "destination": "/api/pkg/[name]" }
-  ]
-}
