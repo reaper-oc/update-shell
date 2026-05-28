@@ -156,7 +156,6 @@ fn enable_package(pkg: &Package) -> Result<(), String> {
 
     for file in &pkg.files {
         if pkg.pkg_type.as_deref() == Some("build") && !file.path.ends_with(".sh") {
-            // Write asset files to the installed dir
             let file_path = installed_dir().join(&pkg.name).join(&file.path);
             if let Some(parent) = file_path.parent() {
                 let _ = fs::create_dir_all(parent);
@@ -164,7 +163,6 @@ fn enable_package(pkg: &Package) -> Result<(), String> {
             let _ = fs::write(&file_path, &file.content);
             script.push_str(&format!("# installed: {}\n", file.path));
         } else if pkg.pkg_type.as_deref() == Some("build") && file.path.ends_with(".sh") {
-            // .sh files in build packages are post-install scripts, not sourced
             script.push_str(&format!("# post-install: {}\n", file.path));
         } else {
             script.push_str(&format!("# source: {}\n", file.path));
@@ -419,7 +417,6 @@ fn build_package(pkg: &Package) -> Result<(), String> {
         return Err("git clone failed".into());
     }
 
-    // Copy package files into the cloned repo (e.g. custom logo)
     for file in &pkg.files {
         let file_path = build_dir.join(&file.path);
         if let Some(parent) = file_path.parent() {
@@ -498,7 +495,6 @@ fn build_package(pkg: &Package) -> Result<(), String> {
             return Err(format!("unsupported build type: {}", other));
         }
         None => {
-            // Default: just run make
             println!("  -> running make ...");
             let status = Command::new("make")
                 .current_dir(&build_dir)
@@ -516,7 +512,6 @@ fn build_package(pkg: &Package) -> Result<(), String> {
         }
     }
 
-    // Clean up build dir
     let _ = fs::remove_dir_all(&build_dir);
 
     Ok(())
@@ -629,7 +624,6 @@ fn cmd_install(args: &[String]) -> Option<i32> {
             continue;
         }
 
-        // Run setup scripts for build-type packages
         if pkg.pkg_type.as_deref() == Some("build") {
             let pkg_dir = installed_dir().join(name);
             std::env::set_var("UPD_PKG_DIR", pkg_dir.to_string_lossy().as_ref());
@@ -654,7 +648,6 @@ fn cmd_install(args: &[String]) -> Option<i32> {
                     }
                 }
             }
-            // Write config files with resolved home path
             if name == "sysfetch" {
                 let home = std::env::var("HOME").unwrap_or_default();
                 let cfg_content = format!(
@@ -664,11 +657,9 @@ fn cmd_install(args: &[String]) -> Option<i32> {
                 let cfg_dir = home.trim_end_matches('/').to_string() + "/.config/fastfetch";
                 let _ = std::fs::create_dir_all(&cfg_dir);
                 let _ = std::fs::write(cfg_dir + "/config.jsonc", &cfg_content);
-                // Create sysfetch -> fastfetch symlink
                 let _ = std::fs::remove_file(bin_dir().join("sysfetch"));
                 let _ = std::os::unix::fs::symlink("fastfetch", bin_dir().join("sysfetch"));
             }
-            // Add bin dir to current session PATH
             let bin_path_str = bin_dir().to_string_lossy().to_string();
             if let Ok(current) = std::env::var("PATH") {
                 if !current.split(':').any(|p| p == bin_path_str) {

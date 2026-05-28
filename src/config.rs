@@ -62,7 +62,6 @@ pub fn load_config() -> ShellConfig {
     if let Some(v) = vars.get("UPD_COLOR_EXIT") { cfg.color_exit = color_code(v); }
     if let Some(v) = vars.get("UPD_SHOW_GIT") { cfg.show_git = v == "1" || v == "yes" || v == "true"; }
     if let Some(v) = vars.get("UPD_SHOW_EXIT_CODE") { cfg.show_exit_code = v == "1" || v == "yes" || v == "true"; }
-    // Also check env vars (override file)
     for k in ["UPD_COLOR_USER", "UPD_COLOR_HOST", "UPD_COLOR_PATH", "UPD_COLOR_GIT", "UPD_COLOR_EXIT"] {
         if let Ok(val) = std::env::var(k) {
             if !val.is_empty() {

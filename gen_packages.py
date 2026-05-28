@@ -11,8 +11,6 @@ OUTPUT_VERCEL = os.path.join(os.path.dirname(__file__), "registry", "api", "pack
 
 packages = []
 
-# ── Helpers ──────────────────────────────────────────────────────
-
 def source(name, desc, content, author="updSH", version="1.0.0", deps=None, env=None):
     packages.append({
         "name": name, "version": version, "description": desc,
@@ -49,10 +47,6 @@ def build_pkg(name, desc, url, binary, build_type="cmake",
         "source_url": url, "build_type": build_type,
         "files": files or []
     })
-
-# ═══════════════════════════════════════════════════════════════════
-#  SOURCE PACKAGES — alias collections
-# ═══════════════════════════════════════════════════════════════════
 
 source("git-aliases", "Useful Git aliases: gst, gd, gc, gb, glog, etc.", """\
 alias gst='git status'
@@ -797,8 +791,6 @@ alias urlencode='python3 -c "import sys,urllib.parse; print(urllib.parse.quote(s
 alias urldecode='python3 -c "import sys,urllib.parse; print(urllib.parse.unquote(sys.stdin.read()))"'
 """)
 
-# ── COMPILE PACKAGES — small C programs ──────────────────────────
-
 compile_c("hexdump", "Hex-dump stdin to stdout", """\
 #include <stdio.h>
 #include <ctype.h>
@@ -1038,8 +1030,6 @@ int main(int argc, char **argv) {
 }
 """)
 
-# ── COMPILE RUST PACKAGES ──
-
 compile_rust("cpuid", "Print CPU information from /proc/cpuinfo", """\
 fn main() {
     let data = std::fs::read_to_string("/proc/cpuinfo").unwrap_or_default();
@@ -1164,8 +1154,6 @@ fn main() {
 }
 """)
 
-# ── BUILD PACKAGES — clone from GitHub and compile ────────────────
-
 with open(ASCII_FILE) as f:
     ascii_logo = f.read()
 
@@ -1249,8 +1237,6 @@ build_pkg("hexyl-build", "hexyl — a command-line hex viewer (Rust)",
 build_pkg("grex-build", "grex — generates regular expressions from test cases",
           "https://github.com/pemistahl/grex", "grex", "cargo",
           "pemistahl", "1.4.5")
-
-# ── WRITE OUTPUTS ─────────────────────────────────────────────────
 
 os.makedirs(os.path.dirname(OUTPUT_RUST), exist_ok=True)
 with open(OUTPUT_RUST, "w") as f:
