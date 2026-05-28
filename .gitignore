@@ -1,1 +1,4 @@
 /target
+registry/
+Cargo.lock
+2>/dev/null/
